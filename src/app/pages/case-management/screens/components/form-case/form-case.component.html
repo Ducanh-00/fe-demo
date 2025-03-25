@@ -1,0 +1,160 @@
+<div class="p-3 form-case">
+  <form [formGroup]="caseForm" (ngSubmit)="onSubmit()" class="employee-form">
+    <div class="form-group">
+      <label for="username" class="form-label require">Mã hoặc tên vụ án</label>
+      <div class="form-input">
+        <input
+          id="username"
+          pInputText
+          formControlName="username"
+          [class.invalid]="isFieldInvalid('username')"
+        />
+        @if(isFieldInvalid('username')) {
+        <div>
+          <small class="p-error">Mã cán bộ là bắt buộc</small>
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="fullName" class="form-label require">Lãnh đaọ phụ trách vụ án</label>
+      <div class="form-input">
+        <input
+          id="fullName"
+          pInputText
+          formControlName="fullName"
+          [class.invalid]="isFieldInvalid('fullName')"
+        />
+        @if(isFieldInvalid('fullName')) {
+        <div>
+          <small class="p-error">Họ và tên là bắt buộc</small>
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="avatar" class="form-label">Kiểm sát viên</label>
+      <div class="form-input">
+        <p-fileUpload
+          #avatarInput
+          mode="basic"
+          accept="image/*"
+          chooseLabel="Tải ảnh lên"
+          [showCancelButton]="true"
+          [multiple]="true"
+          (onSelect)="onSelectAvatar($event)"
+        >
+        </p-fileUpload>
+      </div>
+    </div>
+
+    @if(!!imageForUpload || !!caseForm.controls['avatar'].value) {
+    <div class="form-group">
+      <label class="form-label">&nbsp;</label>
+      <div class="form-input">
+        <div class="relative w-fit">
+          @if(!!imageForUpload) {
+          <div class="flex flex-wrap p-0">
+            <img
+              role="presentation"
+              class="border-round-3xl"
+              [alt]="imageForUpload.name"
+              [src]="imageForUpload.objectURL"
+              width="300"
+              height="400"
+            />
+          </div>
+          } @else if (caseForm.controls['avatar'].value) {
+          <div class="flex flex-wrap p-0">
+            <img
+              role="presentation"
+              alt="avatar"
+              class="border-round-3xl"
+              [src]="caseForm.controls['avatar']"
+              width="300"
+              height="400"
+            />
+          </div>
+          }
+          <p-button
+            icon="pi pi-times"
+            severity="danger"
+            class="absolute"
+            [rounded]="true"
+            [raised]="true"
+            [ngStyle]="{ right: '5px', top: '5px' }"
+            (onClick)="onRemoveAvatar()"
+          />
+        </div>
+      </div>
+    </div>
+    }
+
+
+    <div class="form-group">
+      <label for="departmentId" class="form-label require">Phòng ban</label>
+      <div class="form-input">
+        <p-dropdown
+          id="departmentId"
+          formControlName="departmentId"
+          [options]="listDepartments"
+          [optionValue]="'value'"
+          [optionLabel]="'key'"
+          [class.invalid]="isFieldInvalid('departmentId')"
+        ></p-dropdown>
+        @if(isFieldInvalid('departmentId')) {
+        <div>
+          <small class="p-error">Phòng ban là bắt buộc</small>
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="phoneNumber" class="form-label require">Trạng Thái</label>
+      <div class="form-input">
+        <input
+          id="phoneNumber"
+          pInputText
+          formControlName="phoneNumber"
+          [class.invalid]="isFieldInvalid('phoneNumber')"
+        />
+        @if(isFieldInvalid('phoneNumber')) {
+        <div>
+          <small class="p-error">Số điện thoại là bắt buộc</small>
+        </div>
+        } @if(isPhoneNumberInvalid('phoneNumber')) {
+        <div>
+          <small class="p-error">Số điện thoại chỉ chấp nhận giá trị số</small>
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password" class="form-label">Ngày cập nhật mới nhất</label>
+      <div class="form-input">
+        <p-password
+          id="password"
+          formControlName="password"
+          [style]="{ width: '100%' }"
+        >
+        </p-password>
+      </div>
+    </div>
+    <div class="flex justify-content-end">
+      <button
+        pRipple
+        pButton
+        severity="secondary"
+        type="button"
+        label="Huỷ"
+        class="outline-none bg-none text-color mr-2"
+        (click)="onCloseModal()"
+      ></button>
+      <button pRipple pButton type="submit" label="Tạo"></button>
+    </div>
+  </form>
+</div>

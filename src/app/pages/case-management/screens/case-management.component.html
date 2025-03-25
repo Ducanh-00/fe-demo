@@ -1,0 +1,34 @@
+<div class="case-management">
+  <vks-filter-common
+    [fieldsConfig]="filterConfigCase"
+    (filterEvent)="onFilter($event)"
+  >
+  </vks-filter-common>
+
+  <vks-table-common
+    [data]="listCase"
+    [title]="title"
+    [configHeader]="configHeaderCase"
+    [showPagination]="true"
+    [limitPerPage]="pageSize"
+    [totalRecord]="totalRecord"
+  >
+    <ng-container action-button>
+      <button pButton pRipple type="button" (click)="onOpenModal()">
+        Thêm mới
+      </button>
+    </ng-container>
+  </vks-table-common>
+  <p-dialog
+    [modal]="true"
+    [(visible)]="isVisibleModal"
+    [header]="'Thêm mới vụ án'"
+    [style]="{ width: '50%' }"
+    (onHide)="onCloseModal()"
+  >
+    <vks-form-case
+      (unActiveForm)="onCloseModal()"
+      (forward)="onSubmit($event)"
+    ></vks-form-case> 
+  </p-dialog>
+</div>
