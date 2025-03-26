@@ -104,7 +104,8 @@ export class CaseManagementComponent implements OnInit {
   }
 
   onFilter(filter: any) {
-    console.log(filter);
+    console.log('Filter values:', filter); 
+
     const filterData = {
       name: filter.name || '',
       statusName: filter.statusName || '',
@@ -112,13 +113,10 @@ export class CaseManagementComponent implements OnInit {
       actualTime: filter.actualTime || '',
       updateAt: filter.updateAt || '',
     };
+
     this.loadingService.showLoading(true);
     this.caseManagementHttpService
-      .getListCaseManagement(
-        this.defaultFilterDataCase,
-        this.pageSize,
-        this.page
-      )
+      .getListFilterCase(filterData)
       .pipe(
         delay(2000),
         finalize(() => this.loadingService.showLoading(false))

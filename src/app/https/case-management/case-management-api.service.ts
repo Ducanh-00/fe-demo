@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IFilterFormCase } from './interface.ts';
+import { IFilterFormCase, IListCaseResponse } from './interface.ts';
 import { IPaginationParams } from '@vks/app/shared/models';
 import { IBaseResponse } from '../base-response.interface';
 import { Observable } from 'rxjs';
@@ -38,5 +38,29 @@ export class CaseManagementApiService {
 
   deleteCase(id: string): Observable<any> {
     return this.http.delete(`${this.urlCase}/${id}`);
+  }
+
+  getListFilterCase(
+    filter: any,
+    pageSize: number,
+    page: number
+  ): Observable<IBaseResponse<IListCaseResponse>> {
+    let httpParams = new HttpParams()
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
+
+    if (filter.name) httpParams = httpParams.set('name', filter.name);
+    if (filter.statusName)
+      httpParams = httpParams.set('statusName', filter.statusName);
+    if (filter.departmentName)
+      httpParams = httpParams.set('departmentName', filter.departmentName);
+    if (filter.actualTime)
+      httpParams = httpParams.set('actualTime', filter.actualTime);
+    if (filter.updateAt)
+      httpParams = httpParams.set('updateAt', filter.updateAt);
+
+    return this.http.get<IBaseResponse<IListCaseResponse>>(this.urlCase, {
+      params: httpParams,
+    });
   }
 }

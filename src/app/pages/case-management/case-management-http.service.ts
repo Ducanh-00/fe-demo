@@ -33,4 +33,8 @@ export class CaseManagementHttpService {
   deleteCase(id: string): Observable<any> {
     return this.caseManagementApiService.deleteCase(id);
   }
+
+  getListFilterCase(filter: any): Observable<any> {
+    return this.caseManagementApiService.getListFilterCase(filter, 10, 1);
+  }
 }

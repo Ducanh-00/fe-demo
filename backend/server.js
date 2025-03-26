@@ -39,19 +39,25 @@ const Case = mongoose.model("cases", caseSchema);
 
 app.get("/api/cases", async (req, res) => {
   try {
-    // const name = req.body.data.name || "";
-    // const code = req.body.data.code || "";
-    // const departmentName = req.body.data.departmentName || "";
-    // const actualTime = req.body.data.actualTime || "";
-    // const statusName = req.body.data.statusName || "";
-    // const updateAt = req.body.data.updateAt || "";  
-    filterConditions = {};
-    // if (name) filterConditions.name = { $regex: name, $options: "i" };
-    // if (statusName) filterConditions.statusName = statusName;
-    // if (departmentName) filterConditions.departmentName = departmentName;
-    // if (actualTime) filterConditions.actualTime = actualTime;
-    // if (updateAt) filterConditions.updateAt = updateAt;
+    const { name, code, departmentName, actualTime, statusName, updateAt } =
+      req.query;
+
+    let filterConditions = {};
+
+    if (name) filterConditions.name = { $regex: name, $options: "i" };
+    if (code) filterConditions.code = { $regex: code, $options: "i" };
+    if (departmentName)
+      filterConditions.departmentName = {
+        $regex: departmentName,
+        $options: "i",
+      };
+    if (statusName)
+      filterConditions.statusName = { $regex: statusName, $options: "i" };
+    if (actualTime) filterConditions.actualTime = actualTime;
+    if (updateAt) filterConditions.updateAt = updateAt;
+
     const cases = await Case.find(filterConditions);
+
     res.json(cases);
   } catch (err) {
     res.status(500).json({ message: err.message });
