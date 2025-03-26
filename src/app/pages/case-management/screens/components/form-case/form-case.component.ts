@@ -52,10 +52,25 @@ export class FormCaseComponent {
 
   submitted = false;
   imageForUpload: (File & { objectURL: string }) | null = null;
-
+  ListLeader: IDropdownItem[] = [
+    { label: 'Nguyen Van E', value: '1' },
+    { label: 'Nguyen Van F', value: '2' },
+  ];
   listDepartments: IDropdownItem[] = [
     { label: 'Phòng ban 1', value: '1' },
     { label: 'Phòng ban 2', value: '2' },
+  ];
+  listProsecutor: IDropdownItem[] = [
+    { label: 'Nguyen Van A', value: '1' },
+    { label: 'Nguyen Van B', value: '2' },
+  ];
+  listStatus: IDropdownItem[] = [
+    { label: 'Processing', value: '1' },
+    { label: 'Done', value: '2' },
+  ];
+  listAccused: IDropdownItem[] = [
+    { label: 'Nguyen Van C', value: '1' },
+    { label: 'Nguyen Van D', value: '2' },
   ];
 
   caseForm: FormGroup = this.formBuilder.group({
@@ -121,11 +136,10 @@ export class FormCaseComponent {
       field.touched &&
       this.submitted) as boolean;
   }
-
-  isPhoneNumberInvalid(fieldName: string): boolean {
+  isStatusInvalid(fieldName: string): boolean {
     const field = this.caseForm.get(fieldName);
-    return (field?.errors?.pattern &&
-      field?.touched &&
+    return (field?.errors?.required &&
+      field.touched &&
       this.submitted) as boolean;
   }
 

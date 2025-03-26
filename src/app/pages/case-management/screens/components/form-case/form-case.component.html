@@ -18,7 +18,9 @@
     </div>
 
     <div class="form-group">
-      <label for="fullName" class="form-label require">Lãnh đaọ phụ trách vụ án</label>
+      <label for="fullName" class="form-label require"
+        >Lãnh đaọ phụ trách vụ án</label
+      >
       <div class="form-input">
         <input
           id="fullName"
@@ -37,16 +39,12 @@
     <div class="form-group">
       <label for="avatar" class="form-label">Kiểm sát viên</label>
       <div class="form-input">
-        <p-fileUpload
-          #avatarInput
-          mode="basic"
-          accept="image/*"
-          chooseLabel="Tải ảnh lên"
-          [showCancelButton]="true"
-          [multiple]="true"
-          (onSelect)="onSelectAvatar($event)"
-        >
-        </p-fileUpload>
+        <p-dropdown
+          [options]="listProsecutor"
+          [optionValue]="'value'"
+          [optionLabel]="'key'"
+          [class.invalid]="isFieldInvalid('prosecutor')"
+        ></p-dropdown>
       </div>
     </div>
 
@@ -92,19 +90,18 @@
     </div>
     }
 
-
     <div class="form-group">
-      <label for="departmentId" class="form-label require">Phòng ban</label>
+      <label for="departmentName" class="form-label require">Phòng ban</label>
       <div class="form-input">
         <p-dropdown
-          id="departmentId"
-          formControlName="departmentId"
+          id="departmentName"
+          formControlName="departmentName"
           [options]="listDepartments"
           [optionValue]="'value'"
-          [optionLabel]="'key'"
-          [class.invalid]="isFieldInvalid('departmentId')"
+          [optionLabel]="'label'"
+          [class.invalid]="isFieldInvalid('departmentName')"
         ></p-dropdown>
-        @if(isFieldInvalid('departmentId')) {
+        @if(isFieldInvalid('departmentName')) {
         <div>
           <small class="p-error">Phòng ban là bắt buộc</small>
         </div>
@@ -113,23 +110,23 @@
     </div>
 
     <div class="form-group">
-      <label for="phoneNumber" class="form-label require">Trạng Thái</label>
+      <label for="status" class="form-label require">Trạng Thái</label>
       <div class="form-input">
         <input
-          id="phoneNumber"
+          id="status"
           pInputText
-          formControlName="phoneNumber"
-          [class.invalid]="isFieldInvalid('phoneNumber')"
+          formControlName="status"
+          [class.invalid]="isFieldInvalid('status')"
         />
-        @if(isFieldInvalid('phoneNumber')) {
+        @if(isFieldInvalid('status')) {
         <div>
-          <small class="p-error">Số điện thoại là bắt buộc</small>
+          <small class="p-error">Trạng thái là bắt buộc</small>
         </div>
-        } @if(isPhoneNumberInvalid('phoneNumber')) {
+        } @if(isStatusInvalid('status')) {
         <div>
-          <small class="p-error">Số điện thoại chỉ chấp nhận giá trị số</small>
+          <small class="p-error">Trạng thái là bắt buộc</small>
         </div>
-        }
+        } 
       </div>
     </div>
 
