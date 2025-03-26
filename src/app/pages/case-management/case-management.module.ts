@@ -18,6 +18,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FileUploadModule } from 'primeng/fileupload';
 import { DropdownModule } from 'primeng/dropdown';
 import { PasswordModule } from 'primeng/password';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
   declarations: [CaseManagementComponent, FormCaseComponent],
@@ -37,6 +38,7 @@ import { PasswordModule } from 'primeng/password';
     DropdownModule,
     PasswordModule,
     DropdownModule,
+    CalendarModule,
   ],
   providers: [CaseManagementHttpService, CaseManagementStateService],
 })

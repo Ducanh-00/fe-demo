@@ -1,30 +1,28 @@
 export interface IFilterFormCase {
-    textSearch: string
-    userInChargeId: number
-    prosecutorId: number
-    citizenId: number
-    fromDate: string
-    toDate: string
-    departmentId: number
-    departmentName: string
-    statusId: number
+  textSearch: string;
+  code: string;
+  name: string;
+  actualTime: string;
+  updatedAt: string;
+  statusName: string;
+  departmentName: string;
 }
 
 export interface IParamsPagination {
-    pageSize: number
-    page: number
+  pageSize: number;
+  page: number;
 }
 
 export interface ICaseResponse {
-    id: 0
-    code: string
-    name: string
-    departmentName: string
-    statusName: string
-    actualTime: string
-    updatedAt: string
+  id: 0;
+  code: string;
+  name: string;
+  departmentName: string;
+  statusName: string;
+  actualTime: string;
+  updatedAt: string;
 }
 export interface IListCaseResponse {
-    content: ICaseResponse[]
-    totalRecords: number
+  content: ICaseResponse[];
+  totalRecords: number;
 }

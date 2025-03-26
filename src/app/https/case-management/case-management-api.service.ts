@@ -28,4 +28,15 @@ export class CaseManagementApiService {
       params: httpParams,
     });
   }
+  createCase(data: IFilterFormCase): Observable<any> {
+    return this.http.post(this.urlCase, { data });
+  }
+
+  editCase(id: string, data: IFilterFormCase): Observable<any> {
+    return this.http.put(`${this.urlCase}/${id}`, { data });
+  }
+
+  deleteCase(id: string): Observable<any> {
+    return this.http.delete(`${this.urlCase}/${id}`);
+  }
 }

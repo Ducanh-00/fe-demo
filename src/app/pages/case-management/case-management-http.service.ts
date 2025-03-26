@@ -21,4 +21,16 @@ export class CaseManagementHttpService {
       pageSize,
     });
   }
+
+  createNewCase(data: IFilterFormCase): Observable<any> {
+    return this.caseManagementApiService.createCase(data);
+  }
+
+  editCase(data: IFilterFormCase, id: string): Observable<any> {
+    return this.caseManagementApiService.editCase(id, data);
+  }
+
+  deleteCase(id: string): Observable<any> {
+    return this.caseManagementApiService.deleteCase(id);
+  }
 }

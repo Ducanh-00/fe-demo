@@ -1,3 +1,4 @@
+import { CaseManagementHttpService } from './../../../case-management-http.service';
 import {
   Component,
   EventEmitter,
@@ -13,9 +14,10 @@ import {
 } from '@angular/forms';
 
 import { IDropdownItem, REGEX_PHONE_NUMBER } from '@vks/app/shared/models';
-import { IAccountForm } from '@vks/app/pages/account-management/models';
 import { FileSelectEvent, FileUpload } from 'primeng/fileupload';
 import { ICaseForm } from '../../../models/interfaces';
+import { LoadingService } from '@vks/app/services';
+import { delay, finalize } from 'rxjs';
 
 @Component({
   selector: 'vks-form-case',
@@ -23,6 +25,8 @@ import { ICaseForm } from '../../../models/interfaces';
   styleUrl: './form-case.component.scss',
 })
 export class FormCaseComponent {
+  @Input()
+  caseData!: ICaseForm;
   @Input()
   errors: Record<keyof ICaseForm, string[]> = {
     name: [],
@@ -42,7 +46,6 @@ export class FormCaseComponent {
     statusName: '',
     updateAt: '',
   };
-
   @Output()
   unActiveForm = new EventEmitter();
 
@@ -52,25 +55,22 @@ export class FormCaseComponent {
 
   submitted = false;
   imageForUpload: (File & { objectURL: string }) | null = null;
-  ListLeader: IDropdownItem[] = [
-    { label: 'Nguyen Van E', value: '1' },
-    { label: 'Nguyen Van F', value: '2' },
-  ];
+
   listDepartments: IDropdownItem[] = [
     { label: 'Phòng ban 1', value: '1' },
     { label: 'Phòng ban 2', value: '2' },
   ];
-  listProsecutor: IDropdownItem[] = [
-    { label: 'Nguyen Van A', value: '1' },
-    { label: 'Nguyen Van B', value: '2' },
-  ];
   listStatus: IDropdownItem[] = [
-    { label: 'Processing', value: '1' },
-    { label: 'Done', value: '2' },
+    { label: 'Sơ thẩm ', value: '1' },
+    { label: 'Phúc thẩm', value: '2' },
   ];
-  listAccused: IDropdownItem[] = [
-    { label: 'Nguyen Van C', value: '1' },
-    { label: 'Nguyen Van D', value: '2' },
+  listRoles: IDropdownItem[] = [
+    { label: 'Chức vụ 1', value: '1' },
+    { label: 'Chức vụ 2', value: '2' },
+  ];
+  listUnits: IDropdownItem[] = [
+    { label: 'Đơn vị 1', value: '1' },
+    { label: 'Đơn vị 2', value: '2' },
   ];
 
   caseForm: FormGroup = this.formBuilder.group({
@@ -82,41 +82,43 @@ export class FormCaseComponent {
     updateAt: ['', [Validators.required]],
   });
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private loadingService: LoadingService,
+    private CaseManagementHttpService: CaseManagementHttpService
+  ) {}
 
-  onSelectAvatar(event: FileSelectEvent) {
-    const files = event.files;
-    if (Array.from(files).length) {
-      const file = files[0];
-      const objectURL = URL.createObjectURL(new Blob([file]));
-      this.imageForUpload = {
-        ...file,
-        objectURL,
-      };
-      this.caseForm.controls['avatar'].setValue('objectURL');
-    }
-
-    if (this.avatarInput?.files.length) {
-      this.avatarInput.clearInputElement();
-      this.avatarInput.clearIEInput();
-      this.avatarInput.clear();
-    }
-  }
-
-  onRemoveAvatar() {
-    this.imageForUpload = null;
-    this.caseForm.controls['avatar'].setValue('');
-    console.log('avatarInput', this.avatarInput);
-    if (this.avatarInput?.files) {
-      this.avatarInput.clearInputElement();
-      this.avatarInput.clearIEInput();
-      this.avatarInput.clear();
+  ngOnInit(): void {
+    if (this.caseData) {
+      this.caseForm.setValue({
+        name: this.caseData.name,
+        code: this.caseData.code,
+        departmentName: this.caseData.departmentName,
+        actualTime: this.caseData.actualTime,
+        statusName: this.caseData.statusName,
+        updateAt: this.caseData.updateAt,
+      });
     }
   }
 
   onSubmit() {
-    console.log('this.caseForm.valid', this.caseForm.valid);
+    this.loadingService.showLoading(true);
+    this.caseForm.get('actualTime')?.setValue(new Date().toISOString());
+    console.log(this.caseForm.value);
+
     if (this.caseForm.valid) {
+      this.CaseManagementHttpService.createNewCase(this.caseForm.value)
+        .pipe(
+          delay(2000),
+          finalize(() => this.loadingService.showLoading(false))
+        )
+        .subscribe((response) => {
+          this.loadingService.showLoading(false);
+          console.log('Case created successfully:', response);
+          this.submitted = false;
+          this.caseForm.reset();
+          this.forward.emit(response);
+        });
       this.submitted = false;
       this.forward.emit(this.caseForm.value);
     } else {
@@ -136,24 +138,16 @@ export class FormCaseComponent {
       field.touched &&
       this.submitted) as boolean;
   }
-  isStatusInvalid(fieldName: string): boolean {
-    const field = this.caseForm.get(fieldName);
-    return (field?.errors?.required &&
-      field.touched &&
-      this.submitted) as boolean;
-  }
 
   resetForm() {
     this.submitted = false;
     this.caseForm.reset({
-      username: '',
-      avatar: '',
-      fullName: '',
-      roleId: null,
-      departmentId: null,
-      organizationId: null,
-      phoneNumber: '',
-      password: { value: '', disabled: true },
+      name: '',
+      code: '',
+      departmentName: '',
+      actualTime: '',
+      statusName: '',
+      updateAt: '',
     });
 
     this.imageForUpload = null;

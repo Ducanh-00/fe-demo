@@ -1,94 +1,38 @@
-<div class="p-3 form-case">
+<div class="p-3 form-account">
   <form [formGroup]="caseForm" (ngSubmit)="onSubmit()" class="employee-form">
     <div class="form-group">
-      <label for="username" class="form-label require">Mã hoặc tên vụ án</label>
+      <label for="code" class="form-label require">Mã vụ án</label>
       <div class="form-input">
         <input
-          id="username"
+          id="code"
           pInputText
-          formControlName="username"
-          [class.invalid]="isFieldInvalid('username')"
+          formControlName="code"
+          [class.invalid]="isFieldInvalid('code')"
         />
-        @if(isFieldInvalid('username')) {
+        @if(isFieldInvalid('code')) {
         <div>
-          <small class="p-error">Mã cán bộ là bắt buộc</small>
+          <small class="p-error">Tên là bắt buộc</small>
         </div>
         }
       </div>
     </div>
 
     <div class="form-group">
-      <label for="fullName" class="form-label require"
-        >Lãnh đaọ phụ trách vụ án</label
-      >
+      <label for="name" class="form-label require">Tên vụ án</label>
       <div class="form-input">
         <input
-          id="fullName"
+          id="name"
           pInputText
-          formControlName="fullName"
-          [class.invalid]="isFieldInvalid('fullName')"
+          formControlName="name"
+          [class.invalid]="isFieldInvalid('name')"
         />
-        @if(isFieldInvalid('fullName')) {
+        @if(isFieldInvalid('name')) {
         <div>
-          <small class="p-error">Họ và tên là bắt buộc</small>
+          <small class="p-error">Tên là bắt buộc</small>
         </div>
         }
       </div>
     </div>
-
-    <div class="form-group">
-      <label for="avatar" class="form-label">Kiểm sát viên</label>
-      <div class="form-input">
-        <p-dropdown
-          [options]="listProsecutor"
-          [optionValue]="'value'"
-          [optionLabel]="'key'"
-          [class.invalid]="isFieldInvalid('prosecutor')"
-        ></p-dropdown>
-      </div>
-    </div>
-
-    @if(!!imageForUpload || !!caseForm.controls['avatar'].value) {
-    <div class="form-group">
-      <label class="form-label">&nbsp;</label>
-      <div class="form-input">
-        <div class="relative w-fit">
-          @if(!!imageForUpload) {
-          <div class="flex flex-wrap p-0">
-            <img
-              role="presentation"
-              class="border-round-3xl"
-              [alt]="imageForUpload.name"
-              [src]="imageForUpload.objectURL"
-              width="300"
-              height="400"
-            />
-          </div>
-          } @else if (caseForm.controls['avatar'].value) {
-          <div class="flex flex-wrap p-0">
-            <img
-              role="presentation"
-              alt="avatar"
-              class="border-round-3xl"
-              [src]="caseForm.controls['avatar']"
-              width="300"
-              height="400"
-            />
-          </div>
-          }
-          <p-button
-            icon="pi pi-times"
-            severity="danger"
-            class="absolute"
-            [rounded]="true"
-            [raised]="true"
-            [ngStyle]="{ right: '5px', top: '5px' }"
-            (onClick)="onRemoveAvatar()"
-          />
-        </div>
-      </div>
-    </div>
-    }
 
     <div class="form-group">
       <label for="departmentName" class="form-label require">Phòng ban</label>
@@ -110,37 +54,39 @@
     </div>
 
     <div class="form-group">
-      <label for="status" class="form-label require">Trạng Thái</label>
+      <label for="statusName" class="form-label require">Trạng Thái</label>
       <div class="form-input">
-        <input
-          id="status"
-          pInputText
-          formControlName="status"
-          [class.invalid]="isFieldInvalid('status')"
-        />
-        @if(isFieldInvalid('status')) {
+        <p-dropdown
+          id="statusName"
+          formControlName="statusName"
+          [options]="listStatus"
+          [optionValue]="'value'"
+          [optionLabel]="'label'"
+          [class.invalid]="isFieldInvalid('statusName')"
+        ></p-dropdown>
+        @if(isFieldInvalid('statusName')) {
         <div>
           <small class="p-error">Trạng thái là bắt buộc</small>
         </div>
-        } @if(isStatusInvalid('status')) {
-        <div>
-          <small class="p-error">Trạng thái là bắt buộc</small>
-        </div>
-        } 
+        }
       </div>
     </div>
 
     <div class="form-group">
-      <label for="password" class="form-label">Ngày cập nhật mới nhất</label>
+      <label for="updateAt" class="form-label require">Đến ngày</label>
       <div class="form-input">
-        <p-password
-          id="password"
-          formControlName="password"
-          [style]="{ width: '100%' }"
+        <p-calendar
+          [dateFormat]="'dd/mm/yy'"
+          [iconDisplay]="'input'"
+          [showIcon]="true"
+          [selectionMode]="'single'"
+          formControlName="updateAt"
+          styleClass="w-full"
         >
-        </p-password>
+        </p-calendar>
       </div>
     </div>
+
     <div class="flex justify-content-end">
       <button
         pRipple
